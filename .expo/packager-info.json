@@ -1,0 +1,9 @@
+{
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://48-cqp.anonymous.vienpn-expo.exp.direct",
+  "packagerNgrokUrl": "https://packager.48-cqp.anonymous.vienpn-expo.exp.direct",
+  "ngrokPid": 65487,
+  "devToolsPort": 19002,
+  "packagerPort": 19001,
+  "packagerPid": 65479
+}

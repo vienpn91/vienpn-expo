@@ -1,66 +1,148 @@
-import React from 'react';
-import { createAppContainer } from 'react-navigation';
-import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
-import IconAntDesign from 'react-native-vector-icons/AntDesign'
-import Explore from './screens/Explore'
-import Saved from './screens/Saved'
-import Inbox from './screens/Inbox'
-import Trips from './screens/Trips'
+import React from "react";
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import {
+  ActivityIndicator,
+  AsyncStorage,
+  Button,
+  StatusBar,
+  StyleSheet,
+  View
+} from "react-native";
+import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
+import { createAppContainer ,createSwitchNavigator} from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import Shop from './screens/Shop';
+import Search from './screens/Search';
+class SignInScreen extends React.Component {
+  static navigationOptions = {
+    title: "Please sign in"
+  };
 
+  render() {
+    return (
+      <View style={styles.container}>
+        <Button title="Sign in!" onPress={this._signInAsync} />
+      </View>
+    );
+  }
 
-const TabNavigator = createMaterialBottomTabNavigator(
-  {
-    Explore: {
-      screen: Explore,
-      navigationOptions: {
-        tabBarLabel: 'EXPLORE',
-        tabBarIcon: ({ tintColor }) => (
-          <IconAntDesign name="windows" color={tintColor} size={24} />
-        )
-      }
-    },
-    Saved: {
-      screen: Saved,
-      navigationOptions: {
-        tabBarLabel: 'SAVED',
-        tabBarIcon: ({ tintColor }) => (
-          <IconAntDesign name="save" color={tintColor} size={24} />
-        )
-      }
-    },
-    Trips: {
-      screen: Trips,
-      navigationOptions: {
-        tabBarLabel: 'TRIPS',
-        tabBarIcon: ({ tintColor }) => (
-          <IconAntDesign name="smileo" color={tintColor} size={24} />
-        )
-      }
-    },
-    Inbox: {
-      screen: Inbox,
-      navigationOptions: {
-        tabBarLabel: 'INBOX',
-        tabBarIcon: ({ tintColor }) => (
-          <IconAntDesign name="inbox" color={tintColor} size={24} />
-        )
-      }
-    },
-    Profile: {
-      screen: Inbox,
-      navigationOptions: {
-        tabBarLabel: 'PROFILE',
-        tabBarIcon: ({ tintColor }) => (
-          <IconAntDesign name="user" color={tintColor} size={24} />
-        )
-      }
+  _signInAsync = async () => {
+    await AsyncStorage.setItem("userToken", "abc");
+    this.props.navigation.navigate("App");
+  };
+}
+
+class HomeScreen extends React.Component {
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Button title="Show me more of the app" onPress={this._showMoreApp} />
+        <Button title="Actually, sign me out :)" onPress={this._signOutAsync} />
+      </View>
+    );
+  }
+
+  _showMoreApp = () => {
+    this.props.navigation.navigate("Other");
+  };
+
+  _signOutAsync = async () => {
+    await AsyncStorage.clear();
+    this.props.navigation.navigate("Auth");
+  };
+}
+
+class OtherScreen extends React.Component {
+  static navigationOptions = {
+    title: "Lots of features here"
+  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Button title="I'm done, sign me out" onPress={this._signOutAsync} />
+        <StatusBar barStyle="default" />
+      </View>
+    );
+  }
+
+  _signOutAsync = async () => {
+    await AsyncStorage.clear();
+    this.props.navigation.navigate("Auth");
+  };
+}
+
+class AuthLoadingScreen extends React.Component {
+  constructor() {
+    super();
+    this._bootstrapAsync();
+  }
+
+  // Fetch the token from storage then navigate to our appropriate place
+  _bootstrapAsync = async () => {
+    const userToken = await AsyncStorage.getItem("userToken");
+
+    // This will switch to the App screen or Auth screen and this loading
+    // screen will be unmounted and thrown away.
+    this.props.navigation.navigate(userToken ? "App" : "Auth");
+  };
+
+  // Render any loading content that you like here
+  render() {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator />
+        <StatusBar barStyle="default" />
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  }
+});
+
+const AppStack = createMaterialBottomTabNavigator({
+  Shop: {
+    screen: Shop,
+    navigationOptions: {
+      tabBarLabel: 'Shop',
+      tabBarColor: '#3a79fecf',
+      tabBarIcon: ({ tintColor }) => (
+        <IconAntDesign name="shoppingcart" color={tintColor} size={24} />
+      )
     }
   },
-  {
-    initialRouteName: 'Explore',
-    activeColor: '#f0edf6',
-    inactiveColor: '#3e2465',
-    barStyle: { backgroundColor: 'red' },
-  }
+  HomeScreen: {
+    screen: HomeScreen,
+  },
+  Search: {
+    screen: Search,
+    navigationOptions: {
+      tabBarLabel: 'Search',
+      tabBarColor: '#1e65ff',
+      tabBarIcon: ({ tintColor }) => (
+        <IconAntDesign name="search1" color={tintColor} size={24} />
+      )
+    }
+  },
+});
+const AuthStack = createStackNavigator({ SignIn: SignInScreen });
+
+export default createAppContainer(
+  createSwitchNavigator(
+    {
+      AuthLoading: AuthLoadingScreen,
+      App: AppStack,
+      Auth: AuthStack
+    },
+    {
+      initialRouteName: "AuthLoading"
+    }
+  )
 );
-export default createAppContainer(TabNavigator);

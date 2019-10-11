@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   View,
-  StyleSheet,
   SafeAreaView,
   TextInput,
   Platform,
@@ -10,6 +9,7 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 
 class Explore extends Component {
+  
   componentWillMount() {
     this.startHeaderHeight = 80;
     if (Platform.OS == "android") {
