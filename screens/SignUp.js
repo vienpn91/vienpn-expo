@@ -89,6 +89,17 @@ export default class App extends Component {
           >
             <Text style={{ color: "white" }}> Sign Up</Text>
           </Button>
+          <Button
+            style={{ marginTop: 10 }}
+            full
+            rounded
+            primary
+            onPress={() =>
+              this.signUpUser(this.state.email, this.state.password)
+            }
+          >
+            <Text style={{ color: "white" }}> Login with google</Text>
+          </Button>
         </Form>
       </Container>
     );

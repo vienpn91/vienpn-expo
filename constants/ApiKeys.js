@@ -1,13 +1,6 @@
-import * as firebase from 'firebase';
-
-// Initialize Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyB7hrDfZ07uiqhyhnIgonmAh7ktwOWuqiw",
-  authDomain: "vienpn-expo.firebaseapp.com",
-  databaseURL: "https://vienpn-expo.firebaseio.com",
-  storageBucket: "vienpn-expo.appspot.com",
+  apiKey: "AIzaSyAaYID-PZiax0clUKcUBCmzZzzVLrI6Ry4",
+  authDomain: "expo-react-native-2eb67.firebaseapp.com",
+  databaseURL: "https://expo-react-native-2eb67.firebaseio.com",
+  storageBucket: "expo-react-native-2eb67.appspot.com",
 };
-
-firebase.initializeApp(firebaseConfig);
-
-export default firebase;
